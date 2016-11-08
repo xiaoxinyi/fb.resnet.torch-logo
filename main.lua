@@ -17,7 +17,10 @@ local opts = require 'opts'
 local checkpoints = require 'checkpoints'
 
 torch.setdefaulttensortype('torch.FloatTensor')
-torch.setnumthreads(1)
+torch.setnumthreads(2)
+
+local debugger = require('fb.debugger')
+debugger.enter()
 
 local opt = opts.parse(arg)
 torch.manualSeed(opt.manualSeed)

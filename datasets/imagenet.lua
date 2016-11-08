@@ -80,13 +80,15 @@ local pca = {
 function ImagenetDataset:preprocess()
    if self.split == 'train' then
       return t.Compose{
+         -- t.TenCrop(224),
          t.RandomSizedCrop(224),
+         t.Rotation(180),
          t.ColorJitter({
             brightness = 0.4,
             contrast = 0.4,
             saturation = 0.4,
          }),
-         t.Lighting(0.1, pca.eigval, pca.eigvec),
+         -- t.Lighting(0.1, pca.eigval, pca.eigvec),
          t.ColorNormalize(meanstd),
          t.HorizontalFlip(0.5),
       }
@@ -95,6 +97,7 @@ function ImagenetDataset:preprocess()
       return t.Compose{
          t.Scale(256),
          t.ColorNormalize(meanstd),
+         t.Rotation(180),
          Crop(224),
       }
    else

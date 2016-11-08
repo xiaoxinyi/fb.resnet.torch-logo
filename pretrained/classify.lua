@@ -17,7 +17,8 @@ require 'cunn'
 require 'image'
 
 local t = require '../datasets/transforms'
-local imagenetLabel = require './imagenet'
+-- local imagenetLabel = require './imagenet'
+local imagenetLabel = require './logo45'
 
 if #arg < 2 then
    io.stderr:write('Usage: th classify.lua [MODEL] [FILE]...\n')

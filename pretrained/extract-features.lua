@@ -71,6 +71,9 @@ local number_of_files = #list_of_filenames
 
 if batch_size > number_of_files then batch_size = number_of_files end
 
+-- Time of Load model
+model_timer = torch.Timer()
+
 -- Load the model
 local model = torch.load(arg[1]):cuda()
 
@@ -80,6 +83,10 @@ model:remove(#model.modules)
 
 -- Evaluate mode
 model:evaluate()
+
+-- Print load model time
+print('Time elapse ' .. model_timer:time().real .. ' seconds for loading model')
+
 
 -- The model was trained with this input normalization
 local meanstd = {
@@ -93,7 +100,11 @@ local transform = t.Compose{
    t.CenterCrop(224),
 }
 
+
 local features
+
+-- set timer
+timer = torch.Timer()
 
 for i=1,number_of_files,batch_size do
     local img_batch = torch.FloatTensor(batch_size, 3, 224, 224) -- batch numbers are the 3 channels and size of transform 
@@ -123,6 +134,7 @@ for i=1,number_of_files,batch_size do
    -- this is necesary because the model outputs different dimension based on size of input
    if output:nDimension() == 1 then output = torch.reshape(output, 1, output:size(1)) end 
 
+
    if not features then
        features = torch.FloatTensor(number_of_files, output:size(2)):zero()
    end
@@ -130,5 +142,13 @@ for i=1,number_of_files,batch_size do
 
 end
 
+-- print time elapsed evaluating model
+print('Time elapsed ' .. timer:time().real .. ' seconds for evaluating model')
+
+-- save timer
+save_timer = torch.Timer()
+
 torch.save('features.t7', {features=features, image_list=list_of_filenames})
-print('saved features to features.t7')
+-- print('saved features to features.t7')
+
+print('Time elapse ' .. save_timer:time().real .. ' seconds for saving t7')

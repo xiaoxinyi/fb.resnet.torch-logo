@@ -17,7 +17,7 @@ local URL = 'http://torch7.s3-website-us-east-1.amazonaws.com/data/cifar-10-torc
 local M = {}
 
 local function convertToTensor(files)
-   local data, labels
+   local data = nil, labels
 
    for _, file in ipairs(files) do
       local m = torch.load(file, 'ascii')
@@ -42,8 +42,8 @@ end
 
 function M.exec(opt, cacheFile)
    print("=> Downloading CIFAR-10 dataset from " .. URL)
-   local ok = os.execute('curl ' .. URL .. ' | tar xz -C gen/')
-   assert(ok == true or ok == 0, 'error downloading CIFAR-10')
+   -- local ok = os.execute('curl ' .. URL .. ' | tar xz -C gen/')
+   -- assert(ok == true or ok == 0, 'error downloading CIFAR-10')
 
    print(" | combining dataset into a single file")
    local trainData = convertToTensor({
